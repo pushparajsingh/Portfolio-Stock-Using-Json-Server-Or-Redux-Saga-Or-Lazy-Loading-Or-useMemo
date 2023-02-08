@@ -45,12 +45,12 @@ const Stock = ({ data }) => {
           <div className="spaceBox box5">
             <div>
               <b>
-                Market Value&#36;
-                <span className="margin-price">{data.price}</span>
+                Market Value
+                <span className="margin-price">&#36;{data.price}</span>
               </b>
             </div>
             <div>
-              % of profit value{" "}
+              % of portfolio value
               <span className="margin2-price">{data.portfoli_percent}%</span>
             </div>
             <div>
@@ -73,13 +73,13 @@ const Stock = ({ data }) => {
               ) : (
                 <IoMdArrowDropup className="colorSize2" />
               )}
-              {data.return}
+              {data.return}%
             </span>
           </div>
           <div>
             <div className="unrealized-progress">
               <div className="progress-bg">
-                {data.return > 0 ? (
+                {data.return >= 0 ? (
                   <div
                     className="positive"
                     style={{ width: data?.return / 2 + "%" }}

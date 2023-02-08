@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getPortfolio } from "../../Redux/Actions/action";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -8,26 +7,28 @@ import { ListGroup } from "react-bootstrap";
 import Stock from "../../Components/Layouts/stocks/Stock";
 import { Card } from "react-bootstrap";
 import { CChart } from "@coreui/react-chartjs";
+import { getStocks } from "../../Redux/actions";
 
 const Portfolio = () => {
   const dispatch = useDispatch();
-  const getAllData = useSelector((state) => state?.AllPortFolioData?.data);
+  const getAllData = useSelector((state) => state?.stock?.stockData);
   const [stockData, setStockData] = useState();
-  const [percentage, setPercentage] = useState();
 
   useEffect(() => {
-    dispatch(getPortfolio());
+    dispatch(getStocks());
   }, []);
 
   useEffect(() => {
     setStockData(getAllData);
   }, [getAllData]);
-  useEffect(() => {
+
+  const percentage = useMemo(() => {
+    // execute when stockData change.
     if (stockData) {
       let totalAmount = 0;
       let mfAmt = 0;
       let ETFAmt = 0;
-      stockData.map((item, index) => {
+      stockData.forEach((item, index) => {
         totalAmount += item.invasted_amt;
         if (index < 4) {
           mfAmt += item.invasted_amt;
@@ -38,10 +39,7 @@ const Portfolio = () => {
 
       let mfPercent = (100 * mfAmt) / totalAmount;
       let etfPercent = (100 * ETFAmt) / totalAmount;
-      console.log(parseInt(mfPercent), 555);
-      console.log(parseInt(etfPercent), 888);
-      setPercentage([mfPercent, etfPercent]);
-      console.log(333, stockData[3]);
+      return [mfPercent, etfPercent];
     }
   }, [stockData]);
 
@@ -52,10 +50,9 @@ const Portfolio = () => {
           <Row>
             <Col lg={9}>
               <ListGroup>
-                {stockData &&
-                  stockData?.map((data, i) => {
-                    return <Stock data={data} key={i} />;
-                  })}
+                {stockData?.map((data, i) => {
+                  return <Stock data={data} key={i} />;
+                })}
               </ListGroup>
             </Col>
             <Col lg={3}>

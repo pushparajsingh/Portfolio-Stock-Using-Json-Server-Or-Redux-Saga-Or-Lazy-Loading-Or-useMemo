@@ -1,14 +1,15 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "../Components/Layouts/Index";
-import Portfolio from "../Pages/PortfolioPages/Portfolio";
-
+const Portfolio = lazy(() => import("../Pages/PortfolioPages/Portfolio"));
 const PublicRoutes = () => {
   return (
     <Layout>
-      <Routes>
-        <Route path="/" element={<Portfolio />} />
-      </Routes>
+      <Suspense fallback={<h1 align="center">Loading .... </h1>}>
+        <Routes>
+          <Route path="/" element={<Portfolio />} />
+        </Routes>
+      </Suspense>
     </Layout>
   );
 };
